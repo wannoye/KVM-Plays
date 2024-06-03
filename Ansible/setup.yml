@@ -1,0 +1,65 @@
+---
+- name: Setup New User On All Hosts 
+  hosts: all
+  become: true
+  gather_facts: true
+  vars:
+  - ansible_connection: ssh
+
+  tasks:
+
+  - name: Create New User And Home Directory
+    user:
+      name: '{{ new_user }}'
+      shell: /bin/bash
+      password: '{{ user_hash }}'
+      create_home: true
+      expires: -1
+      state: present
+
+  - name: Assign Sudo Privlege Without A Password
+    lineinfile:
+      path: '/etc/sudoers'
+      backup: true
+      line: '{{ new_user }}	ALL=(ALL)       NOPASSWD: ALL'
+      insertafter: root	ALL=*.*
+      state: present
+
+- name: Generate SSH Keys On Localhost
+  hosts: localhost
+  become: true
+  become_user: '{{ new_user }}'
+  gather_facts: false
+  vars:
+  - ansible_connection: local
+
+  tasks:
+
+  - name: Generate RSA Key
+    openssh_keypair:
+      path: '/home/{{ new_user }}/.ssh/id_rsa'
+      type: rsa
+      size: 4096
+
+- name: Issue SSH Keys To Remote Hosts
+  hosts: all
+  become: true
+  become_user: '{{ new_user }}'
+  gather_facts: false
+  vars:
+  - ansible_connection: ssh
+
+  tasks:
+
+  - name: Create The '/home/{{ new_user }}/.ssh' Directory
+    file:
+      path: '/home/{{ new_user }}/.ssh'
+      state: directory
+      mode: '0700'
+
+  - name: Copy RSA Key To Hosts
+    copy:
+      src: '/home/{{ new_user }}/.ssh/id_rsa.pub'
+      dest: '/home/{{ new_user }}/.ssh/authorized_keys'
+      owner: '{{ new_user }}'
+      mode: '0644'
