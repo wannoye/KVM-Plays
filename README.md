@@ -36,7 +36,6 @@ Note: For out of date systems, this playbook can take quite a while to complete.
 
 ## "setup.yml" Ansible Playbook: 
 
-setup.yml Ansible Playbook:
 The "setup.yml"  Ansible playbook creates a new user as defined in group_vars/all.yml.
 Administrator privlege is assigned that does not require a password for easier use of Ansible playbooks.
 SSH keys are created on the local device and pushed to remote servers.
