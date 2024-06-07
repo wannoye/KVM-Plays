@@ -1,8 +1,8 @@
 # KVM Automation Scripts
 
-## "vm_prep.py" Python Script:
+## "vm_prep.py" Python Script
 
-The "vm_prep.py" Python script is used to prep a KVM host and create a new VM.
+Created to prep a KVM host and create a new VM.
 The script can accomplish the following tasks:
 
 - Remove a logical volume
@@ -25,11 +25,11 @@ Subsequent prompts guide the user through completion of each task.
 
 ```python3 vm_prep.py```
 
-## "update.yml" Ansible Playbook:
+## "update.yml" Ansible Playbook
 
-The "update.yml" Ansible playbook updates Debian and RedHat based linux servers using the OS package manager.
+Updates Debian and RedHat based linux servers using the OS package manager.
 Where possible, servers are rebooted after taking updates.
-Note: For out of date systems, this playbook can take quite a while to complete.
+For out of date systems, this playbook can take quite a while to complete.
 
 ### Requires:
 
@@ -39,10 +39,10 @@ Note: For out of date systems, this playbook can take quite a while to complete.
 
 ```ansible-playbook update.yml -i inventory --ask-vault-pass```
 
-## "setup.yml" Ansible Playbook:
+## "setup.yml" Ansible Playbook
 
-The "setup.yml"  Ansible playbook creates a new user as defined in group_vars/all.yml.
-Administrator privilege is assigned that does not require a password for easier use of Ansible playbooks.
+Creates a new user as defined in group_vars/all.yml.
+Administrator privilege is assigned so that a password is not required for easier use with Ansible. 
 SSH keys are created on the local device and pushed to remote servers.
 
 ### Requires:
