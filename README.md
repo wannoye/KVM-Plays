@@ -49,6 +49,7 @@ SSH keys are created on the local device and pushed to remote servers.
 
 - A username and password for and administrator account in "group_vars/all.yml"
 - An account name to be created and a hashed password string for the new user<br/>
+
 Note: A hashed password string can be created with the command 'mkpasswd -m sha512crypt'.
 
 ### Usage:
