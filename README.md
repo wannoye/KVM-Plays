@@ -1,4 +1,4 @@
-# KVM Automation Scripts:
+# KVM Automation Scripts
 
 ## "vm_prep.py" Python Script:
 
