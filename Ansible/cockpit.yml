@@ -1,0 +1,84 @@
+## Cockpit.yml playbook installs and configures the RHEL cockpit web console
+## on RHEL and Debian based systems and configures the app for initial login. 
+##
+## NOTES:
+## 1. To use this playbook, use 'ansible' as the user in group_vars/all.yml
+## 2. Run the playbook with the command: 'ansible-playbook cockpit.yml --ask-vault-pass'
+## 3. After installation, the web interface can be accessed at https://<IP>:9090
+
+---
+- name: Install Cockpit Services on RHEL and Debian Hosts
+  hosts: all
+  become: true
+  vars:
+  - ansible_connection: ssh
+
+  tasks:
+
+  - name: Get Service Facts
+    service_facts:
+  
+  - name: Allow Cockpit & Access through Firewall (RHEL)
+    firewalld:
+      port: "{{ item }}/tcp"
+      zone: public
+      permanent: yes
+      state: enabled
+    with_items:
+        - 9090
+        - 5902
+        - 5903
+    when: 
+      - ansible_facts['os_family'] in ["RedHat", "AlmaLinux"]
+      - ansible_facts.services['firewalld.service'].state == "running"
+
+  - name: Allow Cockpit & Access through Firewall (Debian)
+    ufw:
+      rule: allow
+      port: "{{ item }}"
+      proto: tcp
+      state: enabled
+    with_items:
+        - 9090
+        - 5902
+        - 5903
+    when: 
+      - ansible_facts['os_family'] == "Debian"
+      - ansible_facts.services['ufw.service'].state == "running" or
+        ansible_facts.services['ufw'].state == "running"
+
+  - name: Install Cockpit (RHEL)
+    dnf:
+      name: cockpit
+      state: latest
+    when: ansible_facts['os_family'] in ["RedHat", "AlmaLinux"]
+
+  - name: Install Cockpit-Machines (RHEL)
+    dnf:
+      name: cockpit-machines
+      state: latest
+    when: 
+      - ansible_facts['os_family'] in ["RedHat", "AlmaLinux"]
+      - ansible_facts.services['qemu-kvm.service'] is defined
+      - ansible_facts.services['qemu-kvm.service'].status == "enabled"
+
+  - name: Install Cockpit (Debian)
+    apt:
+      name: cockpit
+      state: latest
+    when: ansible_facts['os_family'] == "Debian"
+
+  - name: Install Cockpit-Machines (Debian)
+    apt:
+      name: cockpit-machines
+      state: latest
+    when: 
+      - ansible_facts['os_family'] == "Debian"
+      - ansible_facts.services['qemu-kvm.service'] is defined
+      - ansible_facts.services['qemu-kvm.service'].status == "enabled"
+
+  - name: Enable and Start Cockpit
+    service:
+      name: cockpit.socket
+      state: started
+      enabled: yes
