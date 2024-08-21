@@ -1,11 +1,3 @@
-## Cockpit.yml playbook installs and configures the RHEL cockpit web console
-## on RHEL and Debian based systems and configures the app for initial login. 
-##
-## NOTES:
-## 1. To use this playbook, use 'ansible' as the user in group_vars/all.yml
-## 2. Run the playbook with the command: 'ansible-playbook cockpit.yml --ask-vault-pass'
-## 3. After installation, the web interface can be accessed at https://<IP>:9090
-
 ---
 - name: Install Cockpit Services on RHEL and Debian Hosts
   hosts: all
