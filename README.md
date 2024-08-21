@@ -55,3 +55,17 @@ Note: A hashed password string can be created with the command 'mkpasswd -m sha5
 ### Usage:
 
 ```ansible-playbook setup.yml -i inventory --ask-vault-pass```
+
+## "cockpit.yml" Ansible Playbook
+
+Installs the Cockpit management console and nessessary components.<br/>
+Where needed, firewall rules are created to allow access.<br/>
+The 'cockpit-machines' package is installed if a KVM hypervisor is identified.
+
+### Requires:
+
+- A username and password for and administrator account in "group_vars/all.yml"
+
+### Usage:
+
+```ansible-playbook cockpit.yml -i inventory --ask-vault-pass```
