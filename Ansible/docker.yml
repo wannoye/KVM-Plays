@@ -1,0 +1,59 @@
+---
+- name: Install and Configure Docker Services on RHEL Hosts
+  hosts: Captain
+  become: true
+  vars:
+  - ansible_connection: ssh
+
+  tasks:
+
+  - name: Get CentOS version
+    shell: cat /etc/os-release | grep -i '^VERSION_ID=' | cut -d '"' -f2 | cut -d '.' -f1
+    register: os_version
+
+  - name: Add and Enable the Docker Repo
+    yum_repository:
+      name: "docker-ce"
+      description: "Docker CE Repository"
+      baseurl: "https://download.docker.com/linux/centos/{{ os_version.stdout }}/x86_64/stable/"
+      gpgcheck: yes
+      gpgkey: https://download.docker.com/linux/centos/gpg
+      enabled: yes
+
+  - name: Install Docker and Dependencies
+    dnf:
+      name:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+        - docker-buildx-plugin
+        - docker-compose-plugin
+      state: present
+
+  - name: Start and enable the Docker Service
+    systemd:
+      name: docker
+      enabled: yes
+      state: started
+
+  - name: Create the 'docker' Group
+    group:
+      name: docker
+      state: present
+
+  - name: Add users to the 'docker' group
+    ansible.builtin.user:
+      name: "{{ item }}"
+      groups: docker
+      append: yes
+    with_items:
+      - ansible
+      # - another_user
+
+  - name: Validate Docker Installation
+    shell: docker run hello-world
+    register: docker_validation
+
+  - name: Debug Docker Installation
+    debug:
+      msg: "{{ docker_validation.stdout }}"
