@@ -7,7 +7,7 @@
 
   tasks:
 
-  - name: Get CentOS version
+  - name: Get the OS version
     shell: cat /etc/os-release | grep -i '^VERSION_ID=' | cut -d '"' -f2 | cut -d '.' -f1
     register: os_version
 
