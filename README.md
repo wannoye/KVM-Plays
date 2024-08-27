@@ -69,3 +69,17 @@ The 'cockpit-machines' package is installed if a KVM hypervisor is identified.
 ### Usage:
 
 ```ansible-playbook cockpit.yml -i inventory --ask-vault-pass```
+
+## "docker.yml" Ansible Playbook
+
+Installs the Docker service and any needed dependencies.<br/>
+A 'docker' group is created and users are added to allow non-superuser administration.<br/>
+
+### Requires:
+
+- A username and password for and administrator account in "group_vars/all.yml"
+
+### Usage:
+
+```ansible-playbook docker.yml -i inventory --ask-vault-pass```
+
