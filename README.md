@@ -43,7 +43,8 @@ For out of date systems, this playbook can take quite a while to complete.
 
 Creates a new user as defined in group_vars/all.yml.<br/>
 Administrator privilege is assigned so that a 'sudo' password is not required.<br/>
-SSH keys are created on the local device and pushed to remote servers.
+SSH keys are created on the local device and pushed to remote servers.<br/>
+Works for both Debian and RedHat based linux servers.
 
 ### Requires:
 
@@ -60,7 +61,8 @@ Note: A hashed password string can be created with the command 'mkpasswd -m sha5
 
 Installs the Cockpit management console and nessessary components.<br/>
 Where needed, firewall rules are created to allow access.<br/>
-The 'cockpit-machines' package is installed if a KVM hypervisor is identified.
+The 'cockpit-machines' package is installed if a KVM hypervisor is identified.<br/>
+Works for both Debian and RedHat based linux servers.
 
 ### Requires:
 
@@ -74,6 +76,7 @@ The 'cockpit-machines' package is installed if a KVM hypervisor is identified.
 
 Installs the Docker service and any needed dependencies.<br/>
 A 'docker' group is created and users are added to allow non-superuser administration.<br/>
+Works for both Debian and RedHat based linux servers.
 
 ### Requires:
 
