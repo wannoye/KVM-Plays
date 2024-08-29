@@ -1,26 +1,37 @@
 ---
 - name: Install and Configure Docker Services on RHEL Hosts
-  hosts: Captain
+  hosts: Captain Quinjet
   become: true
+  gather_facts: true
   vars:
   - ansible_connection: ssh
 
   tasks:
 
-  - name: Get the OS version
-    shell: cat /etc/os-release | grep -i '^VERSION_ID=' | cut -d '"' -f2 | cut -d '.' -f1
-    register: os_version
-
-  - name: Add and Enable the Docker Repo
+  - name: Add and Enable the Docker Repo (RHEL)
     yum_repository:
       name: "docker-ce"
       description: "Docker CE Repository"
-      baseurl: "https://download.docker.com/linux/centos/{{ os_version.stdout }}/x86_64/stable/"
+      baseurl: "https://download.docker.com/linux/centos/{{ ansible_distribution_major_version }}/x86_64/stable/"
       gpgcheck: yes
       gpgkey: https://download.docker.com/linux/centos/gpg
       enabled: yes
+    when: ansible_facts['os_family'] in ["RedHat", "AlmaLinux"]
 
-  - name: Install Docker and Dependencies
+  - name: Add Docker GPG Key (Debian)
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+    when: ansible_facts['os_family'] == "Debian"
+
+  - name: Add and Enable the Docker Repo (Debian)
+    apt_repository:
+      filename: "docker-ce"
+      repo: "deb https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable"
+      state: present
+    when: ansible_facts['os_family'] == "Debian"
+
+  - name: Install Docker and Dependencies (RHEL)
     dnf:
       name:
         - docker-ce
@@ -29,6 +40,18 @@
         - docker-buildx-plugin
         - docker-compose-plugin
       state: present
+    when: ansible_facts['os_family'] in ["RedHat", "AlmaLinux"]
+
+  - name: Install Docker and Dependencies (Debian)
+    apt:
+      name:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+        - docker-buildx-plugin
+        - docker-compose-plugin
+      state: present
+    when: ansible_facts['os_family'] == "Debian"
 
   - name: Start and enable the Docker Service
     systemd:
@@ -42,13 +65,13 @@
       state: present
 
   - name: Add users to the 'docker' group
-    ansible.builtin.user:
+    user:
       name: "{{ item }}"
       groups: docker
       append: yes
     with_items:
       - ansible
-      # - another_user
+      - weston
 
   - name: Validate Docker Installation
     shell: docker run hello-world
