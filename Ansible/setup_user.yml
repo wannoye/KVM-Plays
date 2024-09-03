@@ -1,6 +1,6 @@
 ---
-- name: Setup New User On All Hosts 
-  hosts: all
+- name: Setup New User
+  hosts: Captain Yondu
   become: true
   gather_facts: true
   vars:
@@ -8,11 +8,28 @@
 
   tasks:
 
+  - name: Install 'mkpasswd' utility (Debian)
+    apt:
+      name: whois 
+      state: present
+    when: ansible_facts['os_family'] == "Debian"
+
+  - name: Install 'mkpasswd' utility (RHEL)
+    dnf:
+      name: mkpasswd
+      state: present
+    when: ansible_facts['os_family'] in ["RedHat", "AlmaLinux"]
+
+  - name: Create a Masked Password Value
+    shell: mkpasswd -m SHA-512 {{ user_pass }}
+    register: masked_pass
+    no_log: yes
+
   - name: Create New User And Home Directory
     user:
       name: '{{ new_user }}'
       shell: /bin/bash
-      password: '{{ user_hash }}'
+      password: '{{ masked_pass.stdout }}'
       create_home: true
       expires: -1
       state: present

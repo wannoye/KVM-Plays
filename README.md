@@ -48,8 +48,10 @@ Works with Debian and RedHat based linux servers.
 
 ### Requires:
 
-- A username and password for and administrator account in "group_vars/all.yml"
-- An account name to be created and a hashed password string for the new user<br/>
+- The following variables assigned in "group_vars/all.yml":<br/>
+    - A username and password for and administrator account<br/>
+    - An account name to be created assigned to the 'new_user' var<br/>
+    - A hashed password string for the new user assigned to the 'user_hash' var<br/>
 
 Note: A hashed password string can be created with the command 'mkpasswd -m sha512crypt'.
 
@@ -86,3 +88,36 @@ Works with Debian and RedHat based linux servers.
 
 ```ansible-playbook docker.yml -i inventory --ask-vault-pass```
 
+## "mount_volumes.yml" Ansible Playbook
+
+Mounts CIFS shares as defined by the 'cifs_server' and 'cifs_share' vars in group_vars/all.yml.<br/>
+The 'cifs-utils' package will be installed and mount points are created if missing.<br/>
+Works with Debian and RedHat based linux servers.
+
+### Requires:
+
+- The following variables assigned in "group_vars/all.yml":<br/>
+    - A username and password for and administrator account<br/>
+    - A username and password assigned to the 'cifs_user' and 'cifs_pass' vars<br/>
+    - An IP or Server name assigned to the 'cifs_server' var<br/>
+    - One or more share names assigned to the 'cifs_share' var list<br/>
+
+Note: The CIFS account must already exist both locally and remote.
+
+### Usage:
+
+```ansible-playbook docker.yml -i inventory --ask-vault-pass```
+
+
+
+
+## Mount_vols.yml playbook Adds CIFS shares to '/etc/fstab' and mounts them.
+## The 'cifs-utils' package will be installed and a credentials file created.
+##
+## NOTES:
+## 1. To use this playbook, use 'ansible' as the user in group_vars/all.yml
+## 2. The , , 
+## 3. This user MUST ALREADY EXIST On Bth Client and Server
+## 4. Assign 
+## 2. Run the playbook with the command: 'ansible-playbook mount_vols.yml --ask-vault-pass'
+## 3. Volumes will be mounted under the '/mnt' directory
