@@ -33,25 +33,25 @@ For out of date systems, this playbook can take quite a while to complete.
 
 ### Requires:
 
-- A username and password for and administrator account in "group_vars/all.yml"
+- An admin username and password assigned to the 'ansible_user' and 'ansible_become_pass' vars in "group_vars/all.yml"
 
 ### Usage:
 
 ```ansible-playbook update.yml -i inventory --ask-vault-pass```
 
-## "setup.yml" Ansible Playbook
+## "setup_user.yml" Ansible Playbook
 
-Creates a new user as defined in group_vars/all.yml.<br/>
-Administrator privilege is assigned so that a 'sudo' password is not required.<br/>
+Creates a new administrator user on target systems with a home directory.<br/>
+For ease of use with Ansible, the account will not require a password for sudo privlege.<br/>
 SSH keys are created on the local device and pushed to remote servers.<br/>
 Works with Debian and RedHat based linux servers.
 
 ### Requires:
 
 - The following variables assigned in "group_vars/all.yml":<br/>
-    - A username and password for and administrator account<br/>
+    - An admin username and password assigned to the 'ansible_user' and 'ansible_become_pass' vars<br/>
     - An account name to be created assigned to the 'new_user' var<br/>
-    - A hashed password string for the new user assigned to the 'user_hash' var<br/>
+    - A password for the new user assigned to the 'user_pass' var<br/>
 
 Note: A hashed password string can be created with the command 'mkpasswd -m sha512crypt'.
 
@@ -59,7 +59,7 @@ Note: A hashed password string can be created with the command 'mkpasswd -m sha5
 
 ```ansible-playbook setup.yml -i inventory --ask-vault-pass```
 
-## "cockpit.yml" Ansible Playbook
+## "install_cockpit.yml" Ansible Playbook
 
 Installs the Cockpit management console and nessessary components.<br/>
 Where needed, firewall rules are created to allow access.<br/>
@@ -68,13 +68,13 @@ Works with Debian and RedHat based linux servers.
 
 ### Requires:
 
-- A username and password for and administrator account in "group_vars/all.yml"
+- An admin username and password assigned to the 'ansible_user' and 'ansible_become_pass' vars in "group_vars/all.yml"
 
 ### Usage:
 
-```ansible-playbook cockpit.yml -i inventory --ask-vault-pass```
+```ansible-playbook install_cockpit.yml -i inventory --ask-vault-pass```
 
-## "docker.yml" Ansible Playbook
+## "install_docker.yml" Ansible Playbook
 
 Installs the Docker service and any needed dependencies.<br/>
 A 'docker' group is created and users are added to allow non-superuser administration.<br/>
@@ -82,22 +82,22 @@ Works with Debian and RedHat based linux servers.
 
 ### Requires:
 
-- A username and password for and administrator account in "group_vars/all.yml"
+- An admin username and password assigned to the 'ansible_user' and 'ansible_become_pass' vars in "group_vars/all.yml"
 
 ### Usage:
 
-```ansible-playbook docker.yml -i inventory --ask-vault-pass```
+```ansible-playbook install_docker.yml -i inventory --ask-vault-pass```
 
-## "mount_volumes.yml" Ansible Playbook
+## "mount_cifs_shares.yml" Ansible Playbook
 
 Mounts CIFS shares as defined by the 'cifs_server' and 'cifs_share' vars in group_vars/all.yml.<br/>
-The 'cifs-utils' package will be installed and mount points are created if missing.<br/>
+The 'cifs-utils' package will be installed and mount points created at '/mnt' if missing.<br/>
 Works with Debian and RedHat based linux servers.
 
 ### Requires:
 
 - The following variables assigned in "group_vars/all.yml":<br/>
-    - A username and password for and administrator account<br/>
+    - An admin username and password assigned to the 'ansible_user' and 'ansible_become_pass' vars<br/>
     - A username and password assigned to the 'cifs_user' and 'cifs_pass' vars<br/>
     - An IP or Server name assigned to the 'cifs_server' var<br/>
     - One or more share names assigned to the 'cifs_share' var list<br/>
@@ -106,18 +106,4 @@ Note: The CIFS account must already exist both locally and remote.
 
 ### Usage:
 
-```ansible-playbook docker.yml -i inventory --ask-vault-pass```
-
-
-
-
-## Mount_vols.yml playbook Adds CIFS shares to '/etc/fstab' and mounts them.
-## The 'cifs-utils' package will be installed and a credentials file created.
-##
-## NOTES:
-## 1. To use this playbook, use 'ansible' as the user in group_vars/all.yml
-## 2. The , , 
-## 3. This user MUST ALREADY EXIST On Bth Client and Server
-## 4. Assign 
-## 2. Run the playbook with the command: 'ansible-playbook mount_vols.yml --ask-vault-pass'
-## 3. Volumes will be mounted under the '/mnt' directory
+```ansible-playbook mount_cifs_shares.yml -i inventory --ask-vault-pass```

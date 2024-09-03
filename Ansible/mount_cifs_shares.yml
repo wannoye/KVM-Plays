@@ -1,0 +1,56 @@
+---
+- name: Mount CIFS Share volume(s)
+  hosts: Captain
+  become: true
+  vars:
+  - ansible_connection: ssh
+
+  tasks:
+
+  - name: Install CIFS Utils Package (Debian)
+    apt:
+      name: cifs-utils
+      state: present
+    when: ansible_facts['os_family'] == "Debian"
+
+  - name: Install CIFS Utils Package (RHEL)
+    dnf:
+      name: cifs-utils
+      state: present
+    when: ansible_facts['os_family'] in ["RedHat", "AlmaLinux"]
+
+  - name: Create Mount Points for the 'cifs_share' volumes
+    file:
+      path: "/mnt/{{ item }}"
+      state: directory
+      mode: '0770'
+      owner: "{{ cifs_user }}"
+      group: "{{ cifs_user }}"
+    loop: "{{ cifs_share }}"
+
+  - name: Create a Credentials File
+    file:
+      path: /root/.secret.txt
+      state: touch
+      owner: root
+      group: root
+      mode: '0600'
+
+  - name: Append Credentials to File
+    lineinfile:
+      path: /root/.secret.txt
+      line: "{{ item }}"
+      insertafter: EOF
+    loop:
+      - "username={{ cifs_user }}"
+      - "password={{ cifs_pass }}"
+    no_log: yes
+
+  - name: Mount Volumes in 'cifs_share' list from 'cifs_server'
+    mount:
+      path: "/mnt/{{ item }}"
+      src: "//{{ cifs_server }}/{{ item }}"
+      fstype: cifs
+      opts: "credentials=/root/.secret.txt,rw,uid=1000,gid=1000,file_mode=0770,dir_mode=0770,users,_netdev"
+      state: mounted
+    loop: "{{ cifs_share }}"
