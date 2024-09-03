@@ -1,5 +1,5 @@
 ---
-- name: Mount CIFS Share volume(s)
+- name: Mount CIFS Share volumes
   hosts: all
   become: true
   vars:
