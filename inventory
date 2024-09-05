@@ -1,11 +1,15 @@
 [kvm]
 Quinjet
 
+[docker]
+Quinjet
+Captain
+
 [vms]
 Captain
-Mantis
-Vision
 Yondu
+# Vision
+# Mantis
 
 [no_reboot]
 Quinjet
