@@ -8,7 +8,7 @@ For out of date systems, this playbook can take quite a while to complete.
 
 ### Requires:
 
-- An admin username and password assigned to the 'ansible_user' and 'ansible_become_pass' vars in "group_vars/all.yml"
+- An admin username and password assigned to the 'ansible_user' and 'ansible_become_pass' vars in 'group_vars/all.yml'
 
 ### Usage:
 
@@ -23,10 +23,10 @@ Works with Debian and RedHat based linux servers.
 
 ### Requires:
 
-- The following variables assigned in "group_vars/all.yml":<br/>
-    - An admin username and password assigned to the 'ansible_user' and 'ansible_become_pass' vars<br/>
-    - An account name to be created assigned to the 'new_user' var<br/>
-    - A password for the new user assigned to the 'user_pass' var<br/>
+- The following variables assigned in 'group_vars/all.yml':<br/>
+    - An admin username and password assigned to 'ansible_user' and 'ansible_become_pass'<br/>
+    - An account name to be created assigned to 'new_user'<br/>
+    - A password for the new user assigned to 'user_pass'<br/>
 
 Note: A hashed password string can be created with the command 'mkpasswd -m sha512crypt'.
 
@@ -43,7 +43,7 @@ Works with Debian and RedHat based linux servers.
 
 ### Requires:
 
-- An admin username and password assigned to the 'ansible_user' and 'ansible_become_pass' vars in "group_vars/all.yml"
+- An admin username and password assigned to the 'ansible_user' and 'ansible_become_pass' vars in 'group_vars/all.yml'
 
 ### Usage:
 
@@ -57,11 +57,11 @@ Works with Debian and RedHat based linux servers.
 
 ### Requires:
 
-- The following variables assigned in "group_vars/all.yml":<br/>
-    - An admin username and password assigned to the 'ansible_user' and 'ansible_become_pass' vars<br/>
-    - A username and password assigned to the 'cifs_user' and 'cifs_pass' vars<br/>
-    - An IP or Server name assigned to the 'cifs_server' var<br/>
-    - One or more share names assigned to the 'cifs_share' var list<br/>
+- The following variables assigned in 'group_vars/all.yml':<br/>
+    - An admin username and password assigned to 'ansible_user' and 'ansible_become_pass'<br/>
+    - A username and password assigned to 'cifs_user' and 'cifs_pass'<br/>
+    - An IP or Server name assigned to the 'cifs_server'<br/>
+    - One or more share names assigned to the 'cifs_share' list<br/>
 
 Note: The CIFS account must already exist both locally and remote.
 

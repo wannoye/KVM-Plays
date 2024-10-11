@@ -39,7 +39,7 @@
     when: ansible_facts['os_family'] == "Debian"
 
 - name: Reboot Appropriate Devices
-  hosts: vms, !no_reboot
+  hosts: all, !hosts
   become: true
   gather_facts: false
   vars:
